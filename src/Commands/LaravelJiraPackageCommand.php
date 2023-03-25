@@ -1,12 +1,14 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+declare(strict_types=1);
+
+namespace Alibori\LaravelJiraPackage\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class LaravelJiraPackageCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-jira-package';
 
     public $description = 'My command';
 
