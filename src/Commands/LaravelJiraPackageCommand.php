@@ -28,7 +28,7 @@ class LaravelJiraPackageCommand extends Command
             default: 0,
         );
 
-        $this->info(string: 'You have selected: ' . $choice . '! Let\'s do it!');
+        $this->info(string: 'You have selected: '.$choice.'! Let\'s do it!');
 
         match ($choice) {
             'Get the Jira Board' => $this->getJiraBoard(),
@@ -47,7 +47,7 @@ class LaravelJiraPackageCommand extends Command
 
         $board_data = $package_instance->getJiraBoard();
 
-        $this->line(string: 'Board Name: ' . $board_data->name);
+        $this->line(string: 'Board Name: '.$board_data->name);
     }
 
     /**
@@ -63,21 +63,21 @@ class LaravelJiraPackageCommand extends Command
             $priority = '';
             if ($issue->fields->priority) {
                 match ($issue->fields->priority->name) {
-                    'Highest' => $priority = '<bg=red;fg=white>' . $issue->fields->priority->name . '</>',
-                    'High' => $priority = '<bg=yellow;fg=white>' . $issue->fields->priority->name . '</>',
-                    'Medium' => $priority = '<bg=blue;fg=white>' . $issue->fields->priority->name . '</>',
-                    'Low' => $priority = '<bg=green;fg=white>' . $issue->fields->priority->name . '</>',
-                    'Lowest' => $priority = '<bg=white;fg=black>' . $issue->fields->priority->name . '</>',
-                    default => $priority = '<bg=black;fg=white>' . $issue->fields->priority->name . '</>',
+                    'Highest' => $priority = '<bg=red;fg=white>'.$issue->fields->priority->name.'</>',
+                    'High' => $priority = '<bg=yellow;fg=white>'.$issue->fields->priority->name.'</>',
+                    'Medium' => $priority = '<bg=blue;fg=white>'.$issue->fields->priority->name.'</>',
+                    'Low' => $priority = '<bg=green;fg=white>'.$issue->fields->priority->name.'</>',
+                    'Lowest' => $priority = '<bg=white;fg=black>'.$issue->fields->priority->name.'</>',
+                    default => $priority = '<bg=black;fg=white>'.$issue->fields->priority->name.'</>',
                 };
             }
 
             $this->line(string: '');
-            $this->line(string: '<fg=magenta>Issue ID / Key:</> ' . $issue->id . ' / ' . $issue->key);
-            $this->line(string: '<fg=magenta>Issue Priority:</> ' . $priority);
-            $this->line(string: '<fg=magenta>Issue Status:</> ' . $issue->fields->status?->name);
-            $this->line(string: '<fg=magenta>Issue Owner:</> ' . $issue->fields->assignee?->displayName);
-            $this->line(string: '<fg=magenta>Issue Due Date:</> ' . $issue->fields->duedate ?? 'No Due Date');
+            $this->line(string: '<fg=magenta>Issue ID / Key:</> '.$issue->id.' / '.$issue->key);
+            $this->line(string: '<fg=magenta>Issue Priority:</> '.$priority);
+            $this->line(string: '<fg=magenta>Issue Status:</> '.$issue->fields->status?->name);
+            $this->line(string: '<fg=magenta>Issue Owner:</> '.$issue->fields->assignee?->displayName);
+            $this->line(string: '<fg=magenta>Issue Due Date:</> '.$issue->fields->duedate ?? 'No Due Date');
             $this->line(string: '');
             $this->line(string: '<fg=magenta>**********************</>');
         }
