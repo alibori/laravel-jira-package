@@ -13,9 +13,9 @@ class LaravelJiraPackageServiceProvider extends PackageServiceProvider
     public function configurePackage(Package $package): void
     {
         $package
-            ->name('laravel-jira-package')
-            ->hasConfigFile('jira-package')
+            ->name(name: 'laravel-jira-package')
+            ->hasConfigFile(configFileName: 'jira-package')
             ->hasViews()
-            ->hasCommand(LaravelJiraPackageCommand::class);
+            ->hasCommand(commandClassName: LaravelJiraPackageCommand::class);
     }
 }
