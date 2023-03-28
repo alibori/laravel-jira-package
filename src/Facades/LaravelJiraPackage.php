@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Facade;
  */
 class LaravelJiraPackage extends Facade
 {
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return \Alibori\LaravelJiraPackage\LaravelJiraPackage::class;
     }
