@@ -10,7 +10,7 @@ use Illuminate\Console\Command;
 
 class LaravelJiraPackageCommand extends Command
 {
-    public $signature = 'jira-pkg:jira';
+    public $signature = 'jira:info';
 
     public $description = 'Command to interact with Jira API';
 
@@ -24,15 +24,18 @@ class LaravelJiraPackageCommand extends Command
             choices: [
                 0 => 'Get the Jira Board',
                 1 => 'Get the Jira Board Issues',
+                2 => 'See Issue Details',
             ],
             default: 0,
         );
 
-        $this->info(string: 'You have selected: ' . $choice . '! Let\'s do it!');
+        $this->info(string: 'You have selected: '.$choice.'! Let\'s do it!');
 
         match ($choice) {
             'Get the Jira Board' => $this->getJiraBoard(),
             'Get the Jira Board Issues' => $this->getJiraBoardIssues(),
+            'See Issue Details' => $this->seeIssueDetails(),
+            default => $this->error(string: 'Something went wrong!'),
         };
 
         return self::SUCCESS;
@@ -47,7 +50,7 @@ class LaravelJiraPackageCommand extends Command
 
         $board_data = $package_instance->getJiraBoard();
 
-        $this->line(string: 'Board Name: ' . $board_data->name);
+        $this->line(string: 'Board Name: '.$board_data->name);
     }
 
     /**
@@ -63,23 +66,53 @@ class LaravelJiraPackageCommand extends Command
             $priority = '';
             if ($issue->fields->priority) {
                 match ($issue->fields->priority->name) {
-                    'Highest' => $priority = '<bg=red;fg=white>' . $issue->fields->priority->name . '</>',
-                    'High' => $priority = '<bg=yellow;fg=white>' . $issue->fields->priority->name . '</>',
-                    'Medium' => $priority = '<bg=blue;fg=white>' . $issue->fields->priority->name . '</>',
-                    'Low' => $priority = '<bg=green;fg=white>' . $issue->fields->priority->name . '</>',
-                    'Lowest' => $priority = '<bg=white;fg=black>' . $issue->fields->priority->name . '</>',
-                    default => $priority = '<bg=black;fg=white>' . $issue->fields->priority->name . '</>',
+                    'Highest' => $priority = '<bg=red;fg=white> '.$issue->fields->priority->name.' </>',
+                    'High' => $priority = '<bg=yellow;fg=white> '.$issue->fields->priority->name.' </>',
+                    'Medium' => $priority = '<bg=blue;fg=white> '.$issue->fields->priority->name.' </>',
+                    'Low' => $priority = '<bg=green;fg=white> '.$issue->fields->priority->name.' </>',
+                    'Lowest' => $priority = '<bg=white;fg=black> '.$issue->fields->priority->name.' </>',
+                    default => $priority = '<bg=black;fg=white> '.$issue->fields->priority->name.' </>',
                 };
             }
 
-            $this->line(string: '');
-            $this->line(string: '<fg=magenta>Issue ID / Key:</> ' . $issue->id . ' / ' . $issue->key);
-            $this->line(string: '<fg=magenta>Issue Priority:</> ' . $priority);
-            $this->line(string: '<fg=magenta>Issue Status:</> ' . $issue->fields->status?->name);
-            $this->line(string: '<fg=magenta>Issue Owner:</> ' . $issue->fields->assignee?->displayName);
-            $this->line(string: '<fg=magenta>Issue Due Date:</> ' . $issue->fields->duedate ?? 'No Due Date');
-            $this->line(string: '');
-            $this->line(string: '<fg=magenta>**********************</>');
+            $this->newLine();
+            $this->line(string: '<options=bold>Issue: '.$issue->id.' - '.$issue->key.'</>');
+            $this->newLine();
+            $this->components->twoColumnDetail(first: '<fg=magenta>Issue Priority:</> ', second: $priority);
+            $this->components->twoColumnDetail(first: '<fg=magenta>Issue Status:</> ', second:  $issue->fields->status?->name);
+            $this->components->twoColumnDetail(first: '<fg=magenta>Issue Owner:</> ', second:  $issue->fields->assignee?->displayName);
+            $this->components->twoColumnDetail(first: '<fg=magenta>Issue Due Date:</> ', second:  $issue->fields->duedate ?? 'No Due Date');
+            $this->newLine();
+            $this->components->twoColumnDetail(first: '');
         }
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    protected function seeIssueDetails(): void
+    {
+        $package_instance = new LaravelJiraPackage();
+
+        $issue_id = $this->ask(question: 'What is the issue ID?');
+
+        $issue_data = $package_instance->getIssueDetails(issue_key: $issue_id);
+
+        $this->newLine();
+        $this->line(string: $issue_data->fields->description);
+
+        $this->table(
+            headers: ['Key', 'Summary', 'Status', 'Priority', 'Assignee', 'Due Date'],
+            rows: [
+                [
+                    $issue_data->key,
+                    $issue_data->fields->summary,
+                    $issue_data->fields->status->name,
+                    $issue_data->fields->priority?->name,
+                    $issue_data->fields->assignee?->displayName,
+                    $issue_data->fields->duedate ?? 'No Due Date',
+                ],
+            ]
+        );
     }
 }

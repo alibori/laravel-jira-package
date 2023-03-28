@@ -55,4 +55,17 @@ final class LaravelJiraPackage
         $response = $this->client->request('GET', $this->jira_url.'/rest/agile/1.0/board/'.$this->jira_board_id.'/issue', $this->request_options);
         return json_decode($response->getBody()->getContents());
     }
+
+    /**
+     * Get Issue Details
+     *
+     * @param string $issue_key
+     * @throws GuzzleException
+     * @return mixed
+     */
+    public function getIssueDetails(string $issue_key): mixed
+    {
+        $response = $this->client->request('GET', $this->jira_url.'/rest/agile/1.0/issue/'.$issue_key, $this->request_options);
+        return json_decode($response->getBody()->getContents());
+    }
 }
