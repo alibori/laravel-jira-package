@@ -52,6 +52,14 @@ return [
 php artisan jira:info
 ```
 
+![jira-1](https://user-images.githubusercontent.com/71702817/228298094-845ec0db-2501-4c19-8e18-f15d4ba15ea9.png)
+
+![jira-2](https://user-images.githubusercontent.com/71702817/228298353-e501e771-2879-4713-81e1-c88232d29044.png)
+
+![jira-3](https://user-images.githubusercontent.com/71702817/228298673-be569ede-6893-49f1-b50a-293f0d804a84.png)
+
+![jira-4](https://user-images.githubusercontent.com/71702817/228298811-c7df62e9-b1ba-4a17-9e7e-c570259212dc.png)
+
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
