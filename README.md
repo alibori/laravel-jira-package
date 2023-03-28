@@ -15,7 +15,7 @@ You need to have a Jira account with a PAT (Personal Access Token) to use this p
 You can install the package via composer:
 
 ```bash
-composer require alibori/laravel-jira-package
+composer require alibori/laravel-jira-package --dev
 ```
 
 You can publish the config file with:
